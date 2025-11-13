@@ -1,6 +1,7 @@
 "use client";
 
 import type { YearReviewData } from "@/lib/sipgate";
+import type { TouchEvent } from "react";
 import { useCallback, useEffect, useState, useTransition } from "react";
 
 type Props = {
@@ -178,6 +179,8 @@ type StorySliderProps = {
 
 const StorySlider = ({ slides }: StorySliderProps) => {
   const [index, setIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchDeltaX, setTouchDeltaX] = useState(0);
 
   const goTo = useCallback(
     (next: number) => {
@@ -196,6 +199,34 @@ const StorySlider = ({ slides }: StorySliderProps) => {
     return () => window.removeEventListener("keydown", handler);
   }, [goTo, index]);
 
+  const handleTouchStart = useCallback((event: TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length === 1) {
+      setTouchStartX(event.touches[0].clientX);
+      setTouchDeltaX(0);
+    }
+  }, []);
+
+  const handleTouchMove = useCallback(
+    (event: TouchEvent<HTMLDivElement>) => {
+      if (touchStartX === null) return;
+      const delta = event.touches[0].clientX - touchStartX;
+      setTouchDeltaX(delta);
+    },
+    [touchStartX],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    if (touchStartX === null) return;
+    const threshold = 50;
+    if (touchDeltaX > threshold) {
+      goTo(index - 1);
+    } else if (touchDeltaX < -threshold) {
+      goTo(index + 1);
+    }
+    setTouchStartX(null);
+    setTouchDeltaX(0);
+  }, [goTo, index, touchStartX, touchDeltaX]);
+
   return (
     <section className="w-full">
       <div className="mb-4 flex items-center justify-center gap-2">
@@ -210,10 +241,18 @@ const StorySlider = ({ slides }: StorySliderProps) => {
           />
         ))}
       </div>
-      <div className="relative overflow-hidden rounded-[40px] bg-black text-white shadow-2xl">
+      <div
+        className="relative overflow-hidden rounded-[40px] bg-black text-white shadow-2xl"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+      >
         <div
           className="flex transition-transform duration-500"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          style={{
+            transform: `translateX(calc(-${index * 100}% + ${touchStartX ? touchDeltaX : 0}px))`,
+          }}
         >
           {slides.map((slide) => (
             <article
