@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 console.log("[auth.config] module loaded");
 import { sipgateIO } from "sipgateio";
 import type { OAuthConfig } from "next-auth/providers";
+import type { TokenEndpointHandler } from "next-auth/providers/oauth";
 
 type SipgateProfile = {
   sub?: string;
@@ -41,6 +42,10 @@ const required = (name: string): string => {
   return value;
 };
 
+type TokenRequestContext = Parameters<
+  NonNullable<TokenEndpointHandler["request"]>
+>[0];
+
 const sipgateProvider: OAuthConfig<SipgateProfile> = {
   id: "sipgate",
   name: "sipgate",
@@ -56,7 +61,7 @@ const sipgateProvider: OAuthConfig<SipgateProfile> = {
   },
   token: {
     url: required("SIPGATE_OAUTH_TOKEN_URL"),
-    async request(context) {
+    async request(context: TokenRequestContext) {
       const { params, provider } = context;
       console.log("[sipgate] token.request invoked", {
         params,
