@@ -331,17 +331,17 @@ const StorySlider = ({ slides }: StorySliderProps) => {
             </article>
           ))}
         </div>
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-6">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-2 sm:px-6">
           <button
             onClick={() => goTo(index - 1)}
-            className="pointer-events-auto hidden h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur sm:flex"
+            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur transition hover:bg-white/40 sm:h-10 sm:w-10"
             aria-label="Previous slide"
           >
             ‹
           </button>
           <button
             onClick={() => goTo(index + 1)}
-            className="pointer-events-auto hidden h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur sm:flex"
+            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur transition hover:bg-white/40 sm:h-10 sm:w-10"
             aria-label="Next slide"
           >
             ›
