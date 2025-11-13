@@ -1,0 +1,189 @@
+{
+  "year": 2025,
+  "hasData": true,
+  "totals": {
+    "all": 398,
+    "inbound": 224,
+    "outbound": 174,
+    "minutes": 1435
+  },
+  "monthlyBreakdown": [
+    {
+      "month": "Jan",
+      "calls": 0
+    },
+    {
+      "month": "Feb",
+      "calls": 0
+    },
+    {
+      "month": "Mar",
+      "calls": 0
+    },
+    {
+      "month": "Apr",
+      "calls": 0
+    },
+    {
+      "month": "May",
+      "calls": 0
+    },
+    {
+      "month": "Jun",
+      "calls": 0
+    },
+    {
+      "month": "Jul",
+      "calls": 0
+    },
+    {
+      "month": "Aug",
+      "calls": 0
+    },
+    {
+      "month": "Sep",
+      "calls": 248
+    },
+    {
+      "month": "Oct",
+      "calls": 101
+    },
+    {
+      "month": "Nov",
+      "calls": 49
+    },
+    {
+      "month": "Dec",
+      "calls": 0
+    }
+  ],
+  "busiestHour": {
+    "hour": 15,
+    "count": 96
+  },
+  "hourlyBreakdown": [
+    {
+      "hour": 0,
+      "calls": 1
+    },
+    {
+      "hour": 1,
+      "calls": 0
+    },
+    {
+      "hour": 2,
+      "calls": 0
+    },
+    {
+      "hour": 3,
+      "calls": 0
+    },
+    {
+      "hour": 4,
+      "calls": 0
+    },
+    {
+      "hour": 5,
+      "calls": 0
+    },
+    {
+      "hour": 6,
+      "calls": 1
+    },
+    {
+      "hour": 7,
+      "calls": 1
+    },
+    {
+      "hour": 8,
+      "calls": 5
+    },
+    {
+      "hour": 9,
+      "calls": 21
+    },
+    {
+      "hour": 10,
+      "calls": 25
+    },
+    {
+      "hour": 11,
+      "calls": 18
+    },
+    {
+      "hour": 12,
+      "calls": 39
+    },
+    {
+      "hour": 13,
+      "calls": 14
+    },
+    {
+      "hour": 14,
+      "calls": 41
+    },
+    {
+      "hour": 15,
+      "calls": 96
+    },
+    {
+      "hour": 16,
+      "calls": 58
+    },
+    {
+      "hour": 17,
+      "calls": 31
+    },
+    {
+      "hour": 18,
+      "calls": 11
+    },
+    {
+      "hour": 19,
+      "calls": 7
+    },
+    {
+      "hour": 20,
+      "calls": 15
+    },
+    {
+      "hour": 21,
+      "calls": 10
+    },
+    {
+      "hour": 22,
+      "calls": 4
+    },
+    {
+      "hour": 23,
+      "calls": 0
+    }
+  ],
+  "longestStreak": {
+    "days": 13,
+    "endedOn": "2025-10-25"
+  },
+  "topContacts": [
+    {
+      "name": "An anonymous llama",
+      "count": 84,
+      "totalMinutes": 0
+    },
+    {
+      "name": "Mystery caller",
+      "count": 52,
+      "totalMinutes": 230.15
+    },
+    {
+      "name": "Unnamed legend",
+      "count": 30,
+      "totalMinutes": 262.9333333333333
+    }
+  ],
+  "longestCall": {
+    "minutes": 360,
+    "contact": "Secret hotline"
+  },
+  "smsReceived": 109,
+  "faxReceived": 0
+}
