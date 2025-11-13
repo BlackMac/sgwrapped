@@ -1,8 +1,10 @@
 import { randomUUID } from "crypto";
 console.log("[auth.config] module loaded");
 import { sipgateIO } from "sipgateio";
+import type { Session } from "next-auth";
 import type { OAuthConfig } from "next-auth/providers";
 import type { TokenEndpointHandler } from "next-auth/providers/oauth";
+import type { JWT } from "next-auth/jwt";
 
 type SipgateProfile = {
   sub?: string;
@@ -45,6 +47,20 @@ const required = (name: string): string => {
 type TokenRequestContext = Parameters<
   NonNullable<TokenEndpointHandler["request"]>
 >[0];
+type AccountLike = {
+  access_token?: string | null;
+  refresh_token?: string | null;
+  expires_at?: number | null;
+  scope?: string | null;
+};
+type ProfileLike = {
+  extension?: string | null;
+  internalNumber?: string | null;
+  webuserId?: string | null;
+  id?: string | null;
+  sub?: string | null;
+  email?: string | null;
+};
 
 const sipgateProvider: OAuthConfig<SipgateProfile> = {
   id: "sipgate",
@@ -145,14 +161,22 @@ export const authConfig = {
   session: { strategy: "jwt" },
   providers: [sipgateProvider],
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({
+      token,
+      account,
+      profile,
+    }: {
+      token: JWT;
+      account?: AccountLike | null;
+      profile?: ProfileLike | null;
+    }) {
       if (account) {
-        token.sipgateAccessToken = account.access_token;
-        token.sipgateRefreshToken = account.refresh_token;
+        token.sipgateAccessToken = account.access_token ?? undefined;
+        token.sipgateRefreshToken = account.refresh_token ?? undefined;
         token.sipgateExpiresAt = account.expires_at
           ? account.expires_at * 1000
           : undefined;
-        token.sipgateScope = account.scope;
+        token.sipgateScope = account.scope ?? undefined;
       }
 
       if (profile) {
@@ -166,12 +190,18 @@ export const authConfig = {
         token.sipgateAccessToken &&
         (!token.sipgateUserEmail || !token.sipgateUserName)
       ) {
-        token = await hydrateSipgateUser(token);
+        token = await hydrateSipgateUser(token as MutableToken);
       }
 
       return token;
     },
-    async session({ session, token }) {
+    async session({
+      session,
+      token,
+    }: {
+      session: Session;
+      token: JWT & { sub?: string };
+    }) {
       session.user = {
         ...session.user,
         id: token.sub ?? session.user?.id ?? "",
@@ -187,9 +217,9 @@ export const authConfig = {
             ? token.sipgateExpiresAt
             : undefined,
         scope: token.sipgateScope,
-        extension: token.sipgateExtension,
-        webuserId: token.sipgateWebuserId,
-        email: token.sipgateUserEmail,
+        extension: token.sipgateExtension ?? undefined,
+        webuserId: token.sipgateWebuserId ?? undefined,
+        email: token.sipgateUserEmail ?? undefined,
       };
 
       return session;

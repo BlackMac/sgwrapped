@@ -1,11 +1,11 @@
 declare module "next-auth" {
   interface Session {
-    user?: {
+    user: {
       id?: string;
       name?: string | null;
       email?: string | null;
       image?: string | null;
-      extension?: string | undefined;
+      extension?: string | null;
     };
     sipgate?: {
       accessToken?: string;
@@ -14,19 +14,24 @@ declare module "next-auth" {
       scope?: string;
       extension?: string;
       webuserId?: string;
-      email?: string;
+      email?: string | null;
     };
+  }
+
+  interface User {
+    extension?: string | null;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
+    sub?: string;
     sipgateAccessToken?: string;
     sipgateRefreshToken?: string;
     sipgateExpiresAt?: number;
     sipgateScope?: string;
-    sipgateExtension?: string;
-    sipgateWebuserId?: string;
+    sipgateExtension?: string | null;
+    sipgateWebuserId?: string | null;
     sipgateUserEmail?: string | null;
     sipgateUserName?: string | null;
   }

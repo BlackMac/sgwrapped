@@ -102,7 +102,7 @@ async function fetchHistoryInChunks(
     let page: HistoryEntry[] = [];
     try {
       page = await history.fetchAll(
-        { from, to },
+        { startDate: from, endDate: to },
         { limit: HISTORY_CHUNK_SIZE, offset },
       );
     } catch (error: unknown) {
@@ -161,11 +161,11 @@ function summarizeHistory(entries: HistoryEntry[], year: number): YearReviewData
       outbound += 1;
     }
 
-    if (entry.type === HistoryEntryType.SMS || entry.type === "SMS") {
+    if (entry.type === HistoryEntryType.SMS) {
       smsReceived += entry.incoming ? 1 : 0;
     }
 
-    if (entry.type === HistoryEntryType.FAX || entry.type === "FAX") {
+    if (entry.type === HistoryEntryType.FAX) {
       faxReceived += entry.incoming ? 1 : 0;
     }
 
