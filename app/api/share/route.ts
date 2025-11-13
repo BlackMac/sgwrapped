@@ -6,6 +6,11 @@ import { FUNNY_CONTACT_LABELS, type YearReviewData } from "@/lib/sipgate";
 
 const SHARE_DIR = path.join(process.cwd(), "tmp", "shares");
 
+type SharePayload = {
+  review: YearReviewData;
+  displayName?: string | null;
+};
+
 const SHARE_ADJECTIVES = [
   "galactic",
   "prismatic",
@@ -88,12 +93,23 @@ async function generateShareId(): Promise<string> {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as YearReviewData;
-    const sanitized = sanitize(body);
+    const body = (await request.json()) as SharePayload;
+    if (!body?.review) {
+      return NextResponse.json({ error: "Missing recap data" }, { status: 400 });
+    }
+    const sanitized = sanitize(body.review);
+    const safeName =
+      typeof body.displayName === "string" && body.displayName.trim().length > 0
+        ? body.displayName.trim()
+        : "Anonymous";
     await fs.mkdir(SHARE_DIR, { recursive: true });
     const id = await generateShareId();
     const file = path.join(SHARE_DIR, `${id}.json`);
-    await fs.writeFile(file, JSON.stringify(sanitized, null, 2), "utf8");
+    await fs.writeFile(
+      file,
+      JSON.stringify({ review: sanitized, displayName: safeName }, null, 2),
+      "utf8",
+    );
     return NextResponse.json({ id, url: `/share/${id}` });
   } catch (error) {
     console.error("[share] failed", error);

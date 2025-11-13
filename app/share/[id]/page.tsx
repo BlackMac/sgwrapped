@@ -1,16 +1,27 @@
 import fs from "fs/promises";
 import path from "path";
 import { YearReview } from "@/components/year-review";
-import { auth } from "@/auth";
 import type { YearReviewData } from "@/lib/sipgate";
 
 const SHARE_DIR = path.join(process.cwd(), "tmp", "shares");
 
-async function loadShare(id: string): Promise<YearReviewData | null> {
+type SharedRecap = {
+  review: YearReviewData;
+  displayName: string;
+};
+
+async function loadShare(id: string): Promise<SharedRecap | null> {
   try {
     const file = path.join(SHARE_DIR, `${id}.json`);
     const data = await fs.readFile(file, "utf8");
-    return JSON.parse(data);
+    const parsed = JSON.parse(data) as Partial<SharedRecap>;
+    if (!parsed?.review) {
+      return null;
+    }
+    return {
+      review: parsed.review,
+      displayName: parsed.displayName?.trim() || "Anonymous",
+    };
   } catch {
     return null;
   }
@@ -23,7 +34,6 @@ type SharePageProps = {
 export default async function SharePage({ params }: SharePageProps) {
   const { id } = await params;
   const shareData = await loadShare(id);
-  const session = await auth();
 
   if (!shareData) {
     return (
@@ -37,8 +47,8 @@ export default async function SharePage({ params }: SharePageProps) {
     <main className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] px-4 py-10 text-white">
       <div className="mx-auto w-full max-w-5xl">
         <YearReview
-          data={shareData}
-          displayName={session?.user?.name ?? "Anonymous"}
+          data={shareData.review}
+          displayName={shareData.displayName}
           autoFetch={false}
           enableShare={false}
         />

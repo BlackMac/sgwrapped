@@ -117,7 +117,7 @@ if (!autoFetch) return;
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(review),
+        body: JSON.stringify({ review, displayName }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload?.url) {
@@ -133,7 +133,7 @@ if (!autoFetch) return;
     } finally {
       setIsSharing(false);
     }
-  }, [review]);
+  }, [review, displayName]);
 
   return (
     <div className="space-y-4">
