@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto";
 console.log("[auth.config] module loaded");
 import { sipgateIO } from "sipgateio";
-import type { AuthOptions } from "next-auth";
 import type { OAuthConfig } from "next-auth/providers";
 
 type SipgateProfile = {
@@ -191,7 +190,7 @@ export const authConfig = {
       return session;
     },
   },
-} satisfies AuthOptions;
+};
 
 async function hydrateSipgateUser(token: MutableToken) {
   if (!token.sipgateAccessToken) {
