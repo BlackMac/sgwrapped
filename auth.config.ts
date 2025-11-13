@@ -3,7 +3,6 @@ console.log("[auth.config] module loaded");
 import { sipgateIO } from "sipgateio";
 import type { Session } from "next-auth";
 import type { OAuthConfig } from "next-auth/providers";
-import type { TokenEndpointHandler } from "next-auth/providers/oauth";
 import type { JWT } from "next-auth/jwt";
 
 type SipgateProfile = {
@@ -44,9 +43,13 @@ const required = (name: string): string => {
   return value;
 };
 
-type TokenRequestContext = Parameters<
-  NonNullable<TokenEndpointHandler["request"]>
->[0];
+type TokenRequestContext = {
+  params: Record<string, string>;
+  provider: {
+    clientId: string;
+    clientSecret?: string;
+  };
+};
 type AccountLike = {
   access_token?: string | null;
   refresh_token?: string | null;
