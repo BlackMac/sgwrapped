@@ -4,11 +4,15 @@ import fs from "fs/promises";
 
 const SHARE_DIR = path.join(process.cwd(), "tmp", "shares");
 
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } },
+  { params }: RouteContext,
 ) {
-  const { id } = params;
+  const { id } = await params;
   try {
     const file = path.join(SHARE_DIR, `${id}.json`);
     const data = await fs.readFile(file, "utf8");
